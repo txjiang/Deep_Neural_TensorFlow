@@ -50,7 +50,7 @@ def pred(w1, b1, w2, b2, w3, b3, w4, b4, data_set):
     res = tf.nn.softmax(layer4)
     return res
 
-def layer_3_nn_L2_dropout(num_steps=15001, batch_size=128, keep_prob=0.5, beta=0.001):
+def layer_3_nn_L2_dropout(num_steps=100001, batch_size=128, keep_prob=0.5, beta=0.001):
 
     graph = tf.Graph()
 
@@ -101,7 +101,7 @@ def layer_3_nn_L2_dropout(num_steps=15001, batch_size=128, keep_prob=0.5, beta=0
                       + tf.nn.l2_loss(weights_layer2) + tf.nn.l2_loss(weights_layer3)))
 
         global_step = tf.Variable(0)  # count the number of steps taken.
-        learning_rate = tf.train.exponential_decay(0.5, global_step, 100000, 0.96, staircase=True)
+        learning_rate = tf.train.exponential_decay(0.5, global_step, 10000, 0.96, staircase=True)
         optimizer = tf.train.GradientDescentOptimizer(learning_rate).minimize(loss, global_step=global_step)
 
         # prediction
