@@ -77,12 +77,20 @@ def cnn_example():
 
         # Model.
         def model(data):
+            #print(data.shape)
+            '''conv2d: Computes a 2-D convolution given 4-D input and filter tensors.
+            Given an input tensor of shape [batch, in_height, in_width, in_channels] and a filter / 
+            kernel tensor of shape [filter_height, filter_width, in_channels, out_channels]'''
+            # input data is [batch = 16, imagew = 28, imageh = 28, depth = 1]
+            # output data is [batch = 16, outw = 14, outh = 14, outchannel = 16]
             conv = tf.nn.conv2d(data, layer1_weights, [1, 2, 2, 1], padding='SAME')
-            hidden = tf.nn.relu(conv + layer1_biases)
+            hidden = tf.nn.relu(conv + layer1_biases) # no more weight, weight is the filter in last eqn
             conv = tf.nn.conv2d(hidden, layer2_weights, [1, 2, 2, 1], padding='SAME')
+            # output data is [batch = 16, outw = 7, outh = 7, outchannel = 16]
             hidden = tf.nn.relu(conv + layer2_biases)
             shape = hidden.get_shape().as_list()
             reshape = tf.reshape(hidden, [shape[0], shape[1] * shape[2] * shape[3]])
+            # convert shape to 2d, [batch, w*h*d]
             hidden = tf.nn.relu(tf.matmul(reshape, layer3_weights) + layer3_biases)
             return tf.matmul(hidden, layer4_weights) + layer4_biases
 
@@ -118,7 +126,7 @@ def cnn_example():
                         valid_prediction.eval(), valid_labels))
             print('Test accuracy: %.1f%%' % accuracy(test_prediction.eval(), test_labels))
 
-#cnn_example()
+cnn_example()
 
 def cnn_with_max_pooling():
     batch_size = 16
@@ -150,11 +158,16 @@ def cnn_with_max_pooling():
         layer4_biases = tf.Variable(tf.constant(1.0, shape=[num_labels]))
 
         def model(data):
+            # input data is [batch = 16, imagew = 28, imageh = 28, depth = 1]
+            # 2dconv output data is [batch = 16, outw = 28, outh = 28, outchannel = 16]
             conv1 = tf.nn.conv2d(data, layer1_weights, [1, 1, 1, 1], padding='SAME')
             hidden1 = tf.nn.relu(conv1 + layer1_biases)
+            # maxpool output data is [batch = 16, outw = 14, outh = 14, outchannel = 16] (depends on strides only, thus divide by 2)
             maxpool1 = tf.nn.max_pool(hidden1, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
+            # 2dconv output data is [batch = 16, outw = 14, outh = 14, outchannel = 16]
             conv2 = tf.nn.conv2d(maxpool1, layer2_weights, [1, 1, 1, 1], padding='SAME')
             hidden2 = tf.nn.relu(conv2 + layer2_biases)
+            # maxpool output data is [batch = 16, outw = 7, outh = 7, outchannel = 16]
             maxpool2 = tf.nn.max_pool(hidden2, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
             shape = maxpool2.get_shape().as_list()
             reshape = tf.reshape(maxpool2, [shape[0], shape[1] * shape[2] * shape[3]])
@@ -194,4 +207,4 @@ def cnn_with_max_pooling():
             print('Test accuracy: %.1f%%' % accuracy(test_prediction.eval(), test_labels))
 
 
-cnn_with_max_pooling()
+#cnn_with_max_pooling()
