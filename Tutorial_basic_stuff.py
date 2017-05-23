@@ -27,5 +27,5 @@ depth (# of layers), however, by doing so, we lose a lot of info
 Thus, using pooling, using same padding or 1 striding, and max pooling or average pooling to reduce the size of feature
 map but without losing info
 structure:
-image->conv layer->max pooling->conv layer->max pooling->fully connected->fully connected->classifier
+image->conv layer(2D cov-> x+b -> Relu activated)->max pooling->conv layer->max pooling->fully connected->fully connected->classifier
 '''
