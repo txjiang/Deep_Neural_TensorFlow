@@ -28,4 +28,12 @@ Thus, using pooling, using same padding or 1 striding, and max pooling or averag
 map but without losing info
 structure:
 image->conv layer(2D cov-> x+b -> Relu activated)->max pooling->conv layer->max pooling->fully connected->fully connected->classifier
+
+RNN:
+LSTM:
+L2 works fine with RNN, Dropout is fine too, but only apply at input and output layer, not on recurrent connections (past->future)
+
+Beam Search:
+Instead of predicting each character each time, you predict characters for the next few steps, and compute the overall probability,
+meanwhile, keep only the highest several sequences to save memory
 '''
